@@ -1,0 +1,20 @@
+{
+  "name": "home",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "home server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "kamil mrowka",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "forever": "^0.14.2",
+    "fs-extra": "^10.0.1",
+    "nodemon": "^2.0.15",
+    "path": "^0.12.7"
+  }
+}

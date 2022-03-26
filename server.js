@@ -21,7 +21,11 @@ app.use(express.static(dirname(fileURLToPath(import.meta.url)) + '/public'))
 const db = client.db(DB_NAME);
 
 app.get('/',(req, res) => {
-  res.json('Hello there')
+  res.json(
+    {
+      msg: 'Im Homie',
+      d: db.namespace,
+  })
 });
 
 app.listen(1234);

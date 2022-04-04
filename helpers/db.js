@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import {MongoClient} from 'mongodb';
+import {MongoClient, ObjectId} from 'mongodb';
 
 const USER = process.env.DB_USER;
 const DB_NAME = process.env.DB_NAME;
@@ -17,6 +17,36 @@ const connect = async() => {
     const d = db.db(DB_NAME);
     return d;
   }catch (error){
+    console.log(error)
+    return;
+  }
+};
+
+export const insertPatient = async (req, res)=> {
+  const patient = req.body;
+  if(!patient) res.json({d: null, err: 'no patient'})
+  try {
+    const db = await connect();
+    const p = db.collection(COLLECTION);
+    const tR = await p.insertOne(patient);
+    res.send('ok')
+
+  }catch(error) {
+    console.log(error)
+    return;
+  }
+};
+
+export const deletePatient = async(req, res) => {
+  const id = req.params.id;
+  const db = await connect();
+  const p = db.collection(COLLECTION);
+  try {
+    const r = await p.deleteOne({_id: ObjectId(id)});
+    if(r.deletedCount > 0) res.send('file: ' + id + ' deleted')
+    else res.send(r.deletedCount + ' file deleted')
+
+  }catch(error) {
     console.log(error)
     return;
   }

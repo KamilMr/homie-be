@@ -22,6 +22,21 @@ const connect = async() => {
   }
 };
 
+export const insertSession = async (req, res)=> {
+  const session = req.body;
+  const id = req.params.id;
+
+  const db = await connect();
+  const p = db.collection(COLLECTION);
+
+  const patient = await p.updateOne({_id: ObjectId(id)},
+    {$push:{
+      'session': session
+    }});
+  console.log(session)
+  res.send(patient)
+};
+
 export const insertPatient = async (req, res)=> {
   const patient = req.body;
   if(!patient) res.json({d: null, err: 'no patient'})

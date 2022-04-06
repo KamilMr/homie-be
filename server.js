@@ -6,7 +6,7 @@ import cors from 'cors';
 import {dirname} from 'path';
 import {fileURLToPath} from 'url';
 
-import {getPatients, insertPatient, deletePatient} from './helpers/db.js';
+import {getPatients,insertSession, insertPatient, deletePatient} from './helpers/db.js';
 
 const app = express();
 
@@ -22,10 +22,7 @@ app.use(cors(corsOpt));
 
 app.post('/patient', insertPatient);
 app.delete('/patient/:id', deletePatient);
-
-app.post('/session', (req, res) => {
-  // code here
-});
+app.post('/session/:id', insertSession);
 
 app.delete('/session', (req, res) => {
   // code here

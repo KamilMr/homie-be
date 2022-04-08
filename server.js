@@ -16,6 +16,11 @@ const corsOpt = {
   origin: 'http://localhost:3000',
 };
 
+//TODO: add remove session option
+//TODO: add yup for validation
+//TODO: create schema for patient
+//TODO: create schema for session
+
 app.use(express.json());
 app.use(express.static(pathName))
 app.use(cors(corsOpt));

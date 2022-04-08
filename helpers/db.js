@@ -23,6 +23,7 @@ const connect = async() => {
 };
 
 export const insertSession = async (req, res)=> {
+  //TODO: add validation to session
   const session = req.body;
   const id = req.params.id;
 
@@ -38,6 +39,7 @@ export const insertSession = async (req, res)=> {
 };
 
 export const insertPatient = async (req, res)=> {
+  //TODO: add validation to patient
   const patient = req.body;
   if(!patient) res.json({d: null, err: 'no patient'})
   try {

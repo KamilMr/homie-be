@@ -47,6 +47,7 @@ export const insertPatient = async (req, res)=> {
     console.log(err);
     res.send({msg: 'validation_err'});
   }
+
   const patient = req.body;
   if(!patient) res.json({d: null, err: 'no patient'})
   try {

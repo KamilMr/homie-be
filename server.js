@@ -38,8 +38,8 @@ app.get('/ini',async(req, res) => {
   res.send(patients);
 });
 
-app.get('*', (res, req) => {
-  res.sendFile('index.html', pathName);
-})
+// app.get('*', (res, req) => {
+//   res.sendFile('index.html', pathName);
+// })
 
 app.listen(1234);

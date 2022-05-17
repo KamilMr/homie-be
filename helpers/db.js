@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import {MongoClient, ObjectId} from 'mongodb';
+import {validateSchema} from './validation.js';
 
 const USER = process.env.DB_USER;
 const DB_NAME = process.env.DB_NAME;
@@ -40,14 +41,19 @@ export const insertSession = async (req, res)=> {
 
 export const insertPatient = async (req, res)=> {
   //TODO: add validation to patient
+  try{
+    await validateSchema(req.body);
+  }catch (err){
+    console.log(err);
+    res.send({msg: 'validation_err'});
+  }
   const patient = req.body;
   if(!patient) res.json({d: null, err: 'no patient'})
   try {
     const db = await connect();
     const p = db.collection(COLLECTION);
     const tR = await p.insertOne(patient);
-    res.send('ok')
-
+    res.send({msg: 'ok'})
   }catch(error) {
     console.log(error)
     return;
@@ -60,8 +66,8 @@ export const deletePatient = async(req, res) => {
   const p = db.collection(COLLECTION);
   try {
     const r = await p.deleteOne({_id: ObjectId(id)});
-    if(r.deletedCount > 0) res.send('file: ' + id + ' deleted')
-    else res.send(r.deletedCount + ' file deleted')
+    if(r.deletedCount > 0) res.send({msg: 'file: ' + id + ' deleted'})
+    else res.send({msg: r.deletedCount + ' file deleted'})
 
   }catch(error) {
     console.log(error)

@@ -10,20 +10,23 @@ const COLLECTION = process.env.COLLECTION;
 
 const URL = `mongodb+srv://${USER}:${PASSWD}@cluster0.z6bd2.mongodb.net/${DB_NAME}retryWrites=true&w=majority`;
 
-const client = new MongoClient(URL, {useNewUrlParser: true, useUnifiedTopology: true});
+const client = new MongoClient(URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 const connect = async() => {
   try {
     const db = await client.connect();
     const d = db.db(DB_NAME);
     return d;
-  }catch (error){
-    console.log(error)
+  }catch (err){
+    console.log(err)
     return;
   }
 };
 
-export const insertSession = async (req, res)=> {
+const insertSession = async (req, res)=> {
   //TODO: add validation to session
   const session = req.body;
   const id = req.params.id;
@@ -39,29 +42,29 @@ export const insertSession = async (req, res)=> {
   res.send(patient)
 };
 
-export const insertPatient = async (req, res)=> {
-  //TODO: add validation to patient
+const insertClient = async (req, res)=> {
+
   try{
-    await validateSchema(req.body);
-  }catch (err){
+    await validateSchema.validateSync(req.body);
+    res.send({msg: 'ok'});
+  }catch(err) {
     console.log(err);
-    res.send({msg: 'validation_err'});
+    return res.send({msg: 'validation_err'});
   }
 
-  const patient = req.body;
-  if(!patient) res.json({d: null, err: 'no patient'})
+  if(!req.body) res.json({d: null, err: 'no patient'})
   try {
     const db = await connect();
     const p = db.collection(COLLECTION);
-    const tR = await p.insertOne(patient);
+    const tR = await p.insertOne(req.body);
     res.send({msg: 'ok'})
-  }catch(error) {
-    console.log(error)
+  }catch(err) {
+    console.log(err)
     return;
   }
 };
 
-export const deletePatient = async(req, res) => {
+const deleteClient = async(req, res) => {
   const id = req.params.id;
   const db = await connect();
   const p = db.collection(COLLECTION);
@@ -70,24 +73,29 @@ export const deletePatient = async(req, res) => {
     if(r.deletedCount > 0) res.send({msg: 'file: ' + id + ' deleted'})
     else res.send({msg: r.deletedCount + ' file deleted'})
 
-  }catch(error) {
-    console.log(error)
+  }catch(err) {
+    console.log(err)
     return;
   }
 };
 
-export const getPatients = async() => {
+const getClient = async() => {
   try {
     const db = await connect();
     const p = db.collection(COLLECTION);
     const tR = await p.find().toArray();
     return tR;
 
-  }catch(error) {
-    console.log(error)
+  }catch(err) {
+    console.log(err)
     return;
-
   }
+};
 
+export {
+  deleteClient,
+  getClient,
+  insertClient,
+  insertSession,
 };
 

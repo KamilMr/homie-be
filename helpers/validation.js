@@ -18,4 +18,4 @@ const validateSessionSchema = yup.object().shape({
   notes: yup.string(),
 });
 
-export {validateSchema};
+export {validClient, validSession};

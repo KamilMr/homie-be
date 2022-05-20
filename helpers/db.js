@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import {MongoClient, ObjectId} from 'mongodb';
-import {validateSchema} from './validation.js';
+import {validClient, validSession} from './validation.js';
 
 const USER = process.env.DB_USER;
 const DB_NAME = process.env.DB_NAME;
@@ -27,25 +27,30 @@ const connect = async() => {
 };
 
 const insertSession = async (req, res)=> {
-  //TODO: add validation to session
-  const session = req.body;
   const id = req.params.id;
+  try{
+    await validSession.validateSync(req.body);
+    res.send({msg: 'ok'});
+  }catch(err) {
+    console.log(err);
+    return res.send({msg: 'validation_err'});
+  }
 
   const db = await connect();
   const p = db.collection(COLLECTION);
 
   const patient = await p.updateOne({_id: ObjectId(id)},
     {$push:{
-      'session': session
+      'session': req.body,
     }});
-  console.log(session)
+  console.log(req.body)
   res.send(patient)
 };
 
 const insertClient = async (req, res)=> {
 
   try{
-    await validateSchema.validateSync(req.body);
+    await validClient.validateSync(req.body);
     res.send({msg: 'ok'});
   }catch(err) {
     console.log(err);
